@@ -2,10 +2,10 @@
 SICStus Prolog Fuzzing Tool - including extension to generate predicates and expressions in (Event-)B represented as abstract syntax trees
 
 
-Types and Options for generate/2:
+__Types and Options for generate/2:__
 
 
-Normal Types:
+__Normal Types:__
 
 * any, variable, boolean([])   
 * fixed(Value)   
@@ -26,7 +26,7 @@ Normal Types:
     * also combinations like [small,positive,nozero]   
 
 
-ASTs:   
+__ASTs:__   
 
 * prob_value_integer(Options)   
     * 'small' ([-128,128]), 'positive', 'negative', 'nozero' ,'between(A,B)'   
@@ -88,7 +88,7 @@ ASTs:
     * i.e. convert b(integer(7),integer,[]) to integer(1,7), whereat 1 is an index   
 
 
-Mutations:   
+__Mutations:__   
 
 * generate(mutation(Input:Type),Out)    
 	* Input is either single data or a list of data   
@@ -98,7 +98,7 @@ Mutations:
 	     * prob_ast_pred, prob_ast_int_expr, prob_ast_set_expr, prob_ast_seq_expr   
 
 
-Implemented AST-Nodes:   
+__Implemented AST-Nodes:__   
 
 * Predicates   
 	* conjunct/2, disjunct/2, implication/2, equivalence/2, exists/2, forall/2   
