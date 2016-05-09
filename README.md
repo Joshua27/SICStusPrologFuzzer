@@ -25,6 +25,7 @@ __Normal Types:__
     * 'small' ([-128,128]), 'positive', 'negative', 'nozero' ,'between(A,B)'   
     * also combinations like [small,positive,nozero]   
 
+__B-Method / Event-B__
 
 __ASTs:__   
 
