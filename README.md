@@ -30,19 +30,18 @@ __B-Method / Event-B__
 __ASTs:__   
 
 * prob_value_integer(Options)   
-    * 'small' ([-128,128]), 'positive', 'negative', 'nozero' ,'between(A,B)'   
-    * also combinations like [small,positive,nozero]   
+    * see integer
 
 * prob_value_any(Options)   
-    * any ProB value of type integer, string, boolean, set or sequence    
-    * 'noset' or any other option of any type   
+    * generate any ProB value   
+    * 'noset' or any other option of any type  
 
 * prob_value_set(Type,Options), prob_value_seq(Type,Options)   
     * 'avl' or 'list' for a specific type of set   
     * 'size:S' to set the amount of elements   
     * 'not-well-defined-values' to generate sets with duplicate elements, wrong indices according to sequences, etc.   
         * without this options only well-defined sets will be generated   
-    * to generate recursive structures the type has been reduced to "set" or "seq" like prob_value_set(set(boolean([]),[list]),[avl])    
+    * to generate nested structures the type has been reduced to "set" or "seq" like prob_value_set(set(boolean([]),[list]),[avl])    
 
 * prob_ast_boolean([])   
 
@@ -57,9 +56,8 @@ __ASTs:__
 * prob_ast_couple[1,2]   
 
 * prob_ast_any(Options)   
-    * any type of integer, string, boolean, set or sequence   
-    * 'noset' to generate no sets at all   
-    * for Options see prob_value_any   
+    * generate any type of expression
+    * 'noset' to generate no sets at all
 
 * prob_ast_set(Type,Options), prob_ast_seq(Type,Options)   
     * 'extension', 'value', 'avl' or 'list' to generate a specific type of set   
@@ -79,7 +77,7 @@ __ASTs:__
     * only for predicates: 'noQuantifier'   
 
 * prob_ast_sat(Options)   
-    * generates ProB ast predicates with identifiers and constraints to test SMT-Solver like ProB, Z3 and CVC4   
+    * generate B predicates yielding satisfiability problems to test the ProB constraint solver and its implementations of Z3 and CVC4
     * 'maxID:C' to set the maximum amount of used identifier   
     * 'maxInterval:C' to specify the maximum size of an interval to be able to control integer constraints   
     * 'posInterval', 'negInterval'   
