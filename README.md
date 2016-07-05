@@ -86,7 +86,7 @@ __ASTs:__
 
 * detype(AST)   
     * detype an ast like its given after parsing   
-    * i.e. convert b(integer(7),integer,[]) to integer(1,7), whereat 1 is an index   
+    * e.g. convert 'b(integer(7),integer,[])' to 'integer(1,7)', whereat 1 is the index   
 
 
 __Mutations:__   
