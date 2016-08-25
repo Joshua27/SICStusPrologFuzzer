@@ -45,13 +45,15 @@ fuzz(Module:Predicate/Arity,Testcount,Arguments) :-
     format('First state is ~w~n',[Seed]) , 
     % run randomized tests
     (run_tests(Predicate,Types,Module,Testcount,Result)
-    ->  (Result = true
-        ->  format('~nAll tests passed~n',[])
-        ;   % error has already been printed by run_tests
-            true)
+    ->  fuzz_aux(Result)
     ;   % run tests failed, error in the code
         error_process(generation_error,Predicate,_,Types,_)).
-fuzz(_:Predicate/Arity,_,_) :- error_process(not_enough_arguments,Predicate/Arity,_,_,_).
+fuzz(_:Predicate/Arity,_,_) :- 
+    error_process(not_enough_arguments,Predicate/Arity,_,_,_).
+
+fuzz_aux(true) :- 
+    format('~nAll tests passed~n',[]).
+fuzz_aux(_).
 
 :- meta_predicate reproduce_test(1,+,+).
 
@@ -63,13 +65,15 @@ reproduce_test(Module:Predicate/Arity,Arguments,Seed) :-
     setrand(Seed) ,
     % run single test 
     (run_tests(Predicate,Types,Module,1,Result)
-    ->  (Result = true
-        ->  format('Test passed for seed ~w~n',[Seed]) 
-        ;   % error has already been printed by run_tests
-            true)
+    ->  reproduce_test_aux(Result,Seed)
     ;   % run tests failed
         error_process(generation_error,Predicate,_,Types,_)).
 reproduce_test(_:Predicate/Arity,_,_) :- error_process(not_enough_arguments,Predicate/Arity,_,_,_).
+
+reproduce_test_aux(true,Seed) :- 
+    format('Test passed for seed ~w~n',[Seed]).
+ % pass, because error has already been printed in run_tests
+reproduce_test_aux(_,_).
 
 :- dynamic error_occurred/0.
 
@@ -105,13 +109,13 @@ run_tests_aux(Predicate,Types,Module,_Testcount,Seed,Values,Error,Result) :-
 % calls a term within its given module with error and timeout exception
 call_term(Module,Term,Error) :-
     time_out(on_exception(_,Module:call(Term),fail),5000,Result) , 
-    (Result = success
-    ->  Error = none
-    ; % timeout
-        Error = timeout).
+    call_term_aux(Result,Error).
 call_term(_Module,_Term,Error) :-
     % predicate failed
     Error = false.
+
+call_term_aux(success,none).
+call_term_aux(_,timeout).
 
 % shrink arguments
 shrink_values(Predicate,Module,Types,Values,Result) :-

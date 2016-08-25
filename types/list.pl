@@ -21,12 +21,12 @@ generate(list(_,Options),[]) :-
 
 % list of given type
 generate(list(Type,Options),Value) :-
-    (member(size:Size,Options) -> 
-        Size > 0 
+    (member(size:Size,Options)
+    ->  Size > 0 
     ;   random(1,50,Size)) , 
     length(Value,Size) , 
-    ((Type = between(_,_) ; Type =.. [prob_value_set|_]) ->
-        NType = Type
+    ((Type = between(_,_) ; Type =.. [prob_value_set|_])
+    ->  NType = Type
     ;   Type =.. [Temp,Opt] , 
         append(Opt,Options,NOptions) ,  
         NType =.. [Temp,NOptions]) , 

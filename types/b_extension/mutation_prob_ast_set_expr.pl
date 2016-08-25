@@ -37,15 +37,7 @@ random_set_expr_mutation(b(Expression,set(SetType),Info),b(NewExpression,set(Set
     Expression =.. [Type,Expr1,Expr2] , 
     member(Type,[union,intersection,set_subtraction]) ,
     random(0,3,R) , 
-    ( R = 0
-    ->  random_set_expr_mutation(Expr1,NewExpr1) , 
-        NewExpr2 = Expr2 
-    ; R = 1
-    ->  random_set_expr_mutation(Expr2,NewExpr2) , 
-        NewExpr1 = Expr1 
-    ;   % mutate both arguments
-        random_set_expr_mutation(Expr1,NewExpr1) ,
-        random_set_expr_mutation(Expr2,NewExpr2)) ,
+    random_set_expr_mutation_aux(R,Expr1,Expr2,NewExpr1,NewExpr2) ,
     NewExpression =.. [Type,NewExpr1,NewExpr2].
 
 % general_union, general_intersection
@@ -64,6 +56,14 @@ random_set_expr_mutation(Expression,NewExpression) :-
 
 % don't mutate empty set or interval
 random_set_expr_mutation(Expression,Expression).
+
+random_set_expr_mutation_aux(0,Expr1,Expr2,NewExpr1,Expr2) :- 
+    random_set_expr_mutation(Expr1,NewExpr1).
+random_set_expr_mutation_aux(1,Expr1,Expr2,Expr1,NewExpr2) :- 
+    random_set_expr_mutation(Expr2,NewExpr2).
+random_set_expr_mutation_aux(2,Expr1,Expr2,NewExpr1,NewExpr2) :- 
+    random_set_expr_mutation(Expr1,NewExpr1) ,
+    random_set_expr_mutation(Expr2,NewExpr2).
 
 % mutate set_extension nodes by replacing with matching set expressions like union or set_subtraction
 mutate_set(b(set_extension(Set),SetType,Info),Mutation) :-

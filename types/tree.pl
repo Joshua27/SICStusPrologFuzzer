@@ -18,8 +18,8 @@ generate(tree(Type),Value) :-
 % tree of given type
 generate(tree(Type,Options),Value) :- 
     % size specifies amount of elements in the tree
-    (member(size:Size,Options) ->
-        Size > 0 
+    (member(size:Size,Options)
+    ->  Size > 0 
     ;   random(1,20,Size)) ,
     generate(list(Type,[size:Size]),List) ,
     list_to_tree(List,Value).

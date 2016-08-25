@@ -8,12 +8,12 @@
 
 generate(atom(Options),Value) :-
     % given or random size
-    ( member(size:Size,Options) ->
-        Size >= 0
+    (member(size:Size,Options)
+    ->  Size >= 0
     ;   random(1,20,Size)) , 
     % only alphabetic with no capital letters, else random chars with special signs
-    ( member(alph,Options) ->
-        generate(list(between(97,122),[size:Size]),Codes)
+    (member(alph,Options)
+    ->  generate(list(between(97,122),[size:Size]),Codes)
     ;   generate(list(between(33,127),[size:Size]),Codes)) ,
     atom_codes(Value,Codes).
 

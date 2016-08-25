@@ -16,12 +16,12 @@ generate(avl_tree(Type),Value) :-
 
 % avl tree with given type and options
 generate(avl_tree(Type,Options),AVL) :-
-    (member(size:Size,Options) ->   
-        Size >= 0
+    (member(size:Size,Options)   
+    ->  Size >= 0
     ;   random(1,50,Size)) ,
     length(Value,Size),
-   (Type = between(_,_) ; Type =.. [prob_value_set|_] ->
-        NType = Type
+   ((Type = between(_,_) ; Type =.. [prob_value_set|_])
+    ->  NType = Type
     ;   Type =.. [Temp,Opt] , 
         append(Opt,Options,NOptions) ,  
         NType =.. [Temp,NOptions]) , 
