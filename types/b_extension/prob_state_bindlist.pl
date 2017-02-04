@@ -14,15 +14,15 @@ ast_ids_to_bindlist(b(identifier(Name),record(FieldList),_),bind(Name,Record)) :
     NType =.. [Type,[]] , 
     findall(FieldName,member(field(FieldName,_),FieldList),NameList) , 
     generate(prob_ast_record(NType,[names:NameList]),Record).
+ast_ids_to_bindlist(b(identifier(Name),seq(empty),_),bind(Name,Value)) :- 
+    generate(prob_ast_seq(empty_sequence),Value).
+ast_ids_to_bindlist(b(identifier(Name),set(empty),_),bind(Name,Value)) :- 
+    generate(prob_ast_set(empty([]),_),Value).
 ast_ids_to_bindlist(b(identifier(Name),Type,_),bind(Name,Value)) :- 
-    ( Type = seq(empty)
-    ->  generate(prob_ast_seq(empty_sequence),Value)
-    ; Type = set(empty)
-    ->  generate(prob_ast_set(empty([]),_),Value)
-    ;   % add options to inner type for generation
-        inner_type(Type,Inner,Outter) , 
-        % options for integer, other types ignore this option
-        NewInner =.. [Inner,[small,positive,nozero]] , 
-        surround_type(NewInner,Outter,TempType) , 
-        gen_type(TempType,value,NewType) ,
-        generate(NewType,Value)).
+    % add options to inner type for generation
+    inner_type(Type,Inner,Outter) , 
+    % options for integer, other types ignore this option
+    NewInner =.. [Inner,[small,positive,nozero]] , 
+    surround_type(NewInner,Outter,TempType) , 
+    gen_type(TempType,value,NewType) ,
+    generate(NewType,Value).
