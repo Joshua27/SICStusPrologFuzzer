@@ -79,7 +79,7 @@ __ASTs:__
 * prob_ast_sat(Options)   
     * generate B predicates yielding satisfiability problems to test the ProB constraint solver and its implementations of Z3 and CVC4
     * 'minID:Min', 'maxID:Max' to set the minimum/maximum amount of used identifier
-	* both options can be used together to create an interval, i.e. randomly chose an amount of used identifiers from [Min,Max] 
+		* both options can be used together to create an interval, i.e. randomly chose an amount of used identifiers from [Min,Max] 
     * 'maxInterval:C' to specify the maximum size of an interval to be able to control integer constraints   
     * 'posInterval', 'negInterval'   
 
