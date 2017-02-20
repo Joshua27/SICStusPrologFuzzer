@@ -3,13 +3,14 @@
 
 generate(prob_ast_sat(Options),ResultPred) :- 
     generate(prob_ast_pred(Options),Pred) , 
-    get_id_amount_from_options(Options,AmountOfIDs) ,
-    insert_identifier_to_ast(Pred,AmountOfIDs,NewPred) ,  % defined in 'snippets.pl'
+    get_id_amount_from_options(Options,AmountOfIDs) , 
+    adapt_id_amount(AmountOfIDs,Amount) , 
+    insert_identifier_to_ast(Pred,Amount,NewPred) ,  % defined in 'snippets.pl'
     set_identifier_constraints(NewPred,Options,ConstrainedPred) , 
     extend_predicate_if_necessary(ConstrainedPred,AmountOfIDs,Options,ResultPred).
 
 set_identifier_constraints(Pred,Options,b(conjunct(Pred,Constraints),pred,[])) :- 
-    generate(prob_state_bindlist(Pred),_:ListOfIdentifier) , 
+    bsyntaxtree:find_typed_identifier_uses(Pred,[],ListOfIdentifier) , 
     generate(prob_ast_id_constraints(ListOfIdentifier,Options),Constraints).
 
 get_id_amount_from_options(Options,AmountOfIDs) :- 
@@ -39,33 +40,26 @@ get_min_max_and_type(Options,(Min,_),min) :-
 get_min_max_and_type(Options,(_,Max),max) :- 
     member(maxID:Max,Options).
 
-valid_pred_according_to_options(CurAmountOfIDs,_,Options) :- 
-    get_min_max_and_type(Options,(Min,Max),interval) , 
-    CurAmountOfIDs >= Min , CurAmountOfIDs =< Max.
-valid_pred_according_to_options(CurAmountOfIDs,AmountOfIDs,Options) :- 
-    CurAmountOfIDs >= AmountOfIDs , 
-    get_min_max_and_type(Options,_,min).
-valid_pred_according_to_options(CurAmountOfIDs,AmountOfIDs,Options) :- 
-    CurAmountOfIDs =< AmountOfIDs , 
-    get_min_max_and_type(Options,_,max).
-
 % generate new predicate to conjunct with the current one if the minimum 
 % amount of identifiers is not reached
 extend_predicate_if_necessary(Pred,AmountOfIDs,Options,ResultPred) :- 
     bsyntaxtree:find_identifier_uses(Pred,[],IDs) , 
     length(IDs,CurAmountOfIDs) , 
-    valid_pred_according_to_options(CurAmountOfIDs,AmountOfIDs,Options) , ! , 
+    CurAmountOfIDs < AmountOfIDs , ! , 
     MissingAmount is AmountOfIDs - CurAmountOfIDs , 
-    extend_predicate_if_necessary_aux(Pred,AmountOfIDs,MissingAmount,IDs,Options,ResultPred).
+    extend_predicate_if_necessary_aux(Pred,AmountOfIDs,MissingAmount,Options,ResultPred).
 extend_predicate_if_necessary(Pred,_,_,Pred).
 
-extend_predicate_if_necessary_aux(Pred,_,0,_,_,Pred).
-extend_predicate_if_necessary_aux(Pred,AmountOfIDs,MissingAmount,_IDs,Options,ResultPred) :- 
+extend_predicate_if_necessary_aux(Pred,_,0,_,Pred).
+extend_predicate_if_necessary_aux(Pred,AmountOfIDs,MissingAmount,Options,ResultPred) :- 
     generate(prob_ast_pred(Options),NewPred) , 
-    % Todo: evaluate using previous identifier names (or generate new one based on random choice) 
-    % but the predicates seem complex enough for now
-    insert_identifier_to_ast(NewPred,MissingAmount,NewPredWithIDs) , 
+    adapt_id_amount(MissingAmount,Amount) , 
+    insert_identifier_to_ast(NewPred,Amount,NewPredWithIDs) , ! , 
     extend_predicate_if_necessary(b(conjunct(Pred,NewPredWithIDs),pred,[]),AmountOfIDs,Options,ResultPred).
+
+adapt_id_amount(Amount,2) :- 
+    Amount > 2.
+adapt_id_amount(Amount,Amount).
 
 shrink(Type,Value,Value) :- 
     Type =.. [prob_ast_sat|_].
