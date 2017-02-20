@@ -74,13 +74,15 @@ get_type_constraint(_,_,b(truth,pred,[])).
 
 get_set_type(InnerType,SetType) :- 
     ground(InnerType) , ! , 
-    get_set_type_aux(_,InnerType,SetType).
+    get_set_type_aux(0,InnerType,SetType).
 get_set_type(_,SetType) :- 
     random(0,3,R) , 
     get_set_type_aux(R,_,SetType).
 get_set_type_aux(0,integer,b(integer_set('INTEGER'),set(integer),[])).
 get_set_type_aux(1,integer,b(integer_set('NATURAL'),set(integer),[])).
 get_set_type_aux(2,integer,b(integer_set('NATURAL1'),set(integer),[])).
+get_set_type_aux_(set(Type),b(pow_subset(Node),set(Type),[])) :- 
+    get_set_type(Type,Node).
 
 generate_id_or_ast_aux(_,InnerType,OutterType,NType) :- 
     \+is_list(InnerType) , 
