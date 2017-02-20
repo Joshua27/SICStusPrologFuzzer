@@ -1,21 +1,15 @@
 % collection of code snippets
 
-% insert a given amount of identifier nodes to an ast
-insert_identifier_to_ast(AST,0,AST).
-insert_identifier_to_ast(b(Node,Type,Info),Amount,NewAST) :- 
+% try to insert a given amount of identifier nodes to an ast, the actual amount can be less
+insert_identifier_to_ast(AST,0,AST) :- !.
+insert_identifier_to_ast(b(Node,Type,_),_,NewAST) :- 
     (Node = min_int ; Node = max_int ; Type = boolean ; Node = integer(_) ; Node = string(_)) , 
-    (Amount > 0 ->
-        generate(prob_ast_identifier(Type),NewAST) 
-    ;   NewAST = b(Node,Type,Info)).
-insert_identifier_to_ast(b(Node,Type,Info),Amount,NewAST) :- 
+    generate(prob_ast_identifier(Type),NewAST).
+insert_identifier_to_ast(b(Node,Type,_),_,NewAST) :- 
     Node =.. [_,Temp] , Type \= pred , Type \= record(_) , (Temp =.. [_] ; is_list(Temp)) , 
-    (Amount > 0 ->
-        generate(prob_ast_identifier(Type),NewAST) 
-    ;   NewAST = b(Node,Type,Info)).
-insert_identifier_to_ast(b(rec(Content),record(Type),Info),Amount,NewAST) :- 
-    (Amount > 0 -> 
-        generate(prob_ast_identifier(record(Type)),NewAST)
-    ;   NewAST = b(rec(Content),record(Type),Info)).
+    generate(prob_ast_identifier(Type),NewAST).
+insert_identifier_to_ast(b(rec(_),record(Type),_),_,NewAST) :- 
+    generate(prob_ast_identifier(record(Type)),NewAST).
 insert_identifier_to_ast(b(Node,Type,Info),Amount,NewAST) :-
     Node =.. [Inner,Arg] , 
     insert_identifier_to_ast(Arg,Amount,NewArg) , 
