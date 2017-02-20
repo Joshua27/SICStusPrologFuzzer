@@ -61,13 +61,15 @@ __ASTs:__
 
 * prob_ast_set(Type,Options), prob_ast_seq(Type,Options)   
     * 'extension', 'value', 'avl' or 'list' to generate a specific type of set   
-    * 'size:S' to set amount of elements   
+    * 'size:S' to set amount of elements
 
 * prob_ast_identifier(TypeOfIdentifier)    
 	* generates identifier node with no binding   
 
-* prob_state_bindlist(AST,BindList:ListOfIdentifierNodes)   
-	* searches all identifier nodes all over AST and generates a bindlist with explicit values and a list of the occurring identifier ast nodes   
+* prob_state_bindlist(AST,Options)   
+	* searches all identifier nodes all over AST and generates a bindlist with explicit values and a list of the occurring identifier ast nodes
+    * option 'unbound' to generate an unbound bindlist
+    * return value of generate/2 is BindList:ListOfIdentifiers
 
 * prob_ast_pred(Type,Options), prob_ast_int_expr(Type,Options), prob_ast_set_expr(Type,Options), prob_ast_seq_expr(Type,Options)   
     * 'not-well-defined' according to B   
