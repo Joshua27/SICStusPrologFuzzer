@@ -9,24 +9,24 @@
 % random avl tree
 generate(avl_tree(Options),Value) :-
     is_list(Options) ,
-    generate(avl_tree(any,Options),Value).
+    generate(avl_tree(any([]),Options),Value).
 
 generate(avl_tree(Type),Value) :-
     generate(avl_tree(Type,[]),Value).
 
 % avl tree with given type and options
 generate(avl_tree(Type,Options),AVL) :-
-    (member(size:Size,Options)   
+    (member(size:Size,Options)
     ->  Size >= 0
     ;   random(1,50,Size)) ,
     length(Value,Size),
    ((Type = between(_,_) ; Type =.. [prob_value_set|_])
     ->  NType = Type
-    ;   Type =.. [Temp,Opt] , 
-        append(Opt,Options,NOptions) ,  
-        NType =.. [Temp,NOptions]) , 
+    ;   Type =.. [Temp,Opt] ,
+        append(Opt,Options,NOptions) ,
+        NType =.. [Temp,NOptions]) ,
     maplist(generate(NType),Value),
-    findall(Key-true,member(Key,Value),Pairs), 
+    findall(Key-true,member(Key,Value),Pairs),
     list_to_avl(Pairs,AVL).
 
 % check empty avl
