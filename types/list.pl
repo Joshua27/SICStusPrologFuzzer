@@ -9,44 +9,39 @@
 
 % list of any type
 generate(list(Options),Value) :-
-    is_list(Options) , 
-    generate(ground_type,Type) , 
+    is_list(Options) ,
+    generate(ground_type,Type) ,
     generate(list(Type,Options),Value).
 
-generate(list(Type),Value) :- 
+generate(list(Type),Value) :-
     generate(list(Type,[]),Value).
 
-generate(list(_,Options),[]) :- 
+generate(list(_,Options),[]) :-
     member(size:0,Options).
 
 % list of given type
 generate(list(Type,Options),Value) :-
     (member(size:Size,Options)
-    ->  Size > 0 
-    ;   random(1,50,Size)) , 
-    length(Value,Size) , 
-    ((Type = between(_,_) ; Type =.. [prob_value_set|_])
-    ->  NType = Type
-    ;   Type =.. [Temp,Opt] , 
-        append(Opt,Options,NOptions) ,  
-        NType =.. [Temp,NOptions]) , 
-    maplist(generate(NType),Value). 
+    ->  Size > 0
+    ;   random(1,50,Size)) ,
+    length(Value,Size) ,  
+    maplist(generate(Type),Value).
 
 % shrink list of list
-shrink(Type,Value,Shrunken) :- 
+shrink(Type,Value,Shrunken) :-
     Type =..[list|_] ,
-    \+ flattened(Value) , 
+    \+ flattened(Value) ,
     maplist(shrink(list),Value,Shrunken).
 
 % check empty list
-shrink(Type,[_],[]) :- 
+shrink(Type,[_],[]) :-
     Type =..[list|_].
 
 % remove random elements
-shrink(Type,L,NL) :- 
-    Type =.. [list|_] , 
-    is_list(L) , 
-    random_member(E,L) , 
+shrink(Type,L,NL) :-
+    Type =.. [list|_] ,
+    is_list(L) ,
+    random_member(E,L) ,
     delete(L,E,NL).
 
 % remove last element of a list

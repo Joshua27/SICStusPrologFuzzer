@@ -20,12 +20,7 @@ generate(avl_tree(Type,Options),AVL) :-
     ->  Size >= 0
     ;   random(1,50,Size)) ,
     length(Value,Size),
-   ((Type = between(_,_) ; Type =.. [prob_value_set|_])
-    ->  NType = Type
-    ;   Type =.. [Temp,Opt] ,
-        append(Opt,Options,NOptions) ,
-        NType =.. [Temp,NOptions]) ,
-    maplist(generate(NType),Value),
+    maplist(generate(Type),Value),
     findall(Key-true,member(Key,Value),Pairs),
     list_to_avl(Pairs,AVL).
 
