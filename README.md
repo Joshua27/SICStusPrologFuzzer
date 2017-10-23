@@ -7,7 +7,11 @@ __Types and Options for generate/2:__
 
 __Normal Types:__
 
-* any, variable, boolean([])   
+* any(Options)
+    * Options can be an arbitrary list of options for any type as listed below
+
+* variable, boolean([])
+
 * fixed(Value)   
     * keep value   
 
