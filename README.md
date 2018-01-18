@@ -1,5 +1,5 @@
 # SICStusPrologFuzzer
-SICStus Prolog Fuzzing Tool - including extension to generate predicates and expressions in (Event-)B represented as abstract syntax trees
+SICStus Prolog Fuzzing Tool - including an extension to generate classical B and Event-B predicates and expressions represented as abstract syntax trees
 
 
 __Types and Options for generate/2:__
